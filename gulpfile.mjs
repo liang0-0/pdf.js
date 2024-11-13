@@ -558,7 +558,7 @@ function createWebBundle(defines, options) {
   const viewerFileConfig = createWebpackConfig(
     defines,
     {
-      filename: "viewer.mjs",
+      filename:  defines.MINIFIED ? "viewer.min.mjs" : "viewer.mjs",
       library: {
         type: "module",
       },
@@ -1236,6 +1236,7 @@ function buildMinified(defines, dir) {
   return ordered([
     createMainBundle(defines).pipe(gulp.dest(dir + "build")),
     createWorkerBundle(defines).pipe(gulp.dest(dir + "build")),
+    createWebBundle(defines, { defaultPreferencesDir: "minified/" }).pipe(gulp.dest(dir + "build")),
     createSandboxBundle(defines).pipe(gulp.dest(dir + "build")),
     createImageDecodersBundle({ ...defines, IMAGE_DECODERS: true }).pipe(
       gulp.dest(dir + "image_decoders")
